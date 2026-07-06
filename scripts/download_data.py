@@ -1,19 +1,5 @@
-"""
-Phase 0 — data acquisition.
 
-PRIMARY source (no login, always available):
-  Parfumo cleaned CSV from R's TidyTuesday (2024-12-10), hosted on GitHub.
-  ~59k perfumes: name, brand, year, concentration, rating value + count,
-  main accords, top/middle/base notes, perfumer, url.
 
-OPTIONAL source (needs a valid Kaggle API token + accepted dataset terms):
-  Fragrantica dataset — adds the large multilingual review corpus.
-  This step is best-effort: if Kaggle fails, the script still succeeds,
-  because the Parfumo CSV alone is enough to start Phase 0.
-
-Run:
-  python scripts/download_data.py
-"""
 from pathlib import Path
 import urllib.request
 from dotenv import load_dotenv
