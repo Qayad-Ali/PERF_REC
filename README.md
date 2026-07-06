@@ -77,7 +77,9 @@ python eval/run_eval.py
 
 ## v2 upgrades
 
-- Bigger library + a second source to compare declared notes vs. crowd-perceived accords
+- Bigger library 
+- a second source to compare declared notes 
+-a company published and crowd percieved comparison between the same fragrances
 - llama.cpp instead of Ollama for finer GPU control and speed
 - A cleaner, more user-friendly UI
 - Cohere Command R+ for context-aware, grounded inference
