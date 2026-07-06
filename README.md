@@ -48,7 +48,7 @@ scripts/       data download
 config/        config.yaml
 ```
 ## System Architecture
-![architecture](assets\architecture.png)
+![architecture](assets\archi.png)
 ## Data
 
 ~21k fragrances I scraped from an online retailer (names, brands, notes, accords, gender, descriptions), with strong global and Middle-Eastern coverage. Longevity/projection/climate fit aren't in the source; I derive them from the note structure. Personal project, so the scraped data and scrapers are git-ignored and not redistributed. Only code is in this repo.
