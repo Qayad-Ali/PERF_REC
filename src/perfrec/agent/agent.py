@@ -1,9 +1,9 @@
-# src/perfrec/agent/agent.py
+
 """
 Lightweight agent: LLM PLANS (mode, query, city, filters) -> executor RUNS tools
 (get_climate, search, suggest_layers) and SELF-CORRECTS (retries looser if thin)
 -> LLM COMPOSES a grounded answer. Manual JSON routing (works with local gemma).
-Run:  python src/perfrec/agent/agent.py "I'm in Delhi, humid, want an oud I can layer for evening"
+
 """
 from __future__ import annotations
 import sys, json
