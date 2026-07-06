@@ -1,49 +1,85 @@
 # PerfRec 🌿
 
-**A climate-aware, layering-first perfume recommender built on RAG.**
+A climate-aware, layering-first perfume recommender built on RAG.
 
-Most perfume "AI" is a shallow marketing quiz. PerfRec takes a free-form request —
-*"I live in Delhi, it's hot and humid, I want compliments, and I'd like to layer two perfumes I own"* —
-and returns grounded recommendations (single scents **and** layering combinations), tuned to your
-climate and taste, with an explanation of *why*.
+I collect perfume, and the "find your scent" tools online felt shallow. None of them reason about the weather where you live or how to *layer* two scents. So I built PerfRec: type your situation in plain English (*"Delhi, hot and humid, office, want compliments"*) and get grounded recommendations plus layering combinations from ~21k fragrances. It runs locally with a local LLM, so no API keys or cloud costs.
 
-## What makes it different
-- **Dual-source truth** — models what the brand *declares* is in the bottle separately from what the
-  crowd *actually smells*, and treats their disagreement as a feature.
-- **Climate-aware** — heat, humidity, and season change the recommendation, not just the copy.
-- **Layering engine** — recommends *pairs* (with ratios + application tips), not just bottles.
+## What it does
 
-## Architecture
-`query understanding → hybrid retrieval (Qdrant, filtered) → cross-encoder rerank → grounded generation`,
-with a small agentic loop for layering. See [`PerfRec-Project-Plan.md`](./PerfRec-Project-Plan.md) for the full design.
+- **Recommends single scents** Filter the data with your query with semantic search.
+- **Suggests layering pairs** (a fresh "lifter" over a long-lasting "anchor") with a spray ratio and application tips.
+-**Climate aware response** works on weather Api to check the climate of the particular city mentioned.
 
-## Project layout
+## How it works
+
+RAG pipeline with a small agent layer on top:
+
+- **Retrieve** — fragrances are embedded (sentence-transformer) and stored in Qdrant. Climate is a **hard payload filter**, not a ranking nudge: in humid weather, cloying scents are dropped from the candidate set entirely.
+- **Rerank** — over-fetch top 20, then a cross-encoder reranks to the best 6 (this lifted family precision 0.76 → 0.83).
+- **Generate** — a local LLM writes the answer from *only* the retrieved candidates and cites real notes, so it can't invent perfumes.
+- **Agent** — a planner routes the request (single / layering / both), calls tools (climate resolver, search, layering engine), and **self-corrects**: if the filter leaves too few results, it loosens and retries.
+- **Layering engine** — pulls two pools (lifters + anchors) and scores every pair on role complementarity, fragrance-wheel harmony, shared-accord "bridge," climate fit, and a bonus for matching known layering recipes (e.g. citrus + woody).
+
+## Results
+
+15-query golden set, family precision on the top 6:
+
+| Setup | Family precision@6 | Climate-filter correctness |
+|---|---|---|
+| Dense retrieval | 0.756 | 1.0 |
+| Dense + cross-encoder rerank | **0.833** | 1.0 |
+
+## Project structure
+
 ```
-config/          # config.yaml
-data/            # raw / interim / processed  (gitignored; see data/README.md)
-scripts/         # download_data.py  (Phase 0)
-src/perfrec/     # ingest · schema · ontology · enrich · embed · index · retrieve · generate · layering · api
-notebooks/       # data profiling & experiments
-eval/            # golden set + layering seed pairs
-app/             # Streamlit demo
-tests/
+src/perfrec/
+  ingest/      raw data → canonical parquet
+  enrich/      derive family, longevity, projection, climate scores
+  embed/       build embeddable documents
+  index/       embed + load into Qdrant
+  retrieve/    vector search + climate filter + cross-encoder rerank
+  generate/    grounded LLM recommendation
+  layering/    anchor + lifter pairing engine
+  agent/       planner → executor → composer
+  schema/      canonical Perfume model
+app/           Streamlit UI
+eval/          golden set + eval harness
+scripts/       data download
+config/        config.yaml
 ```
 
-## Quickstart
+## Data
+
+~21k fragrances I scraped from an online retailer (names, brands, notes, accords, gender, descriptions), with strong global and Middle-Eastern coverage. Longevity/projection/climate fit aren't in the source; I derive them from the note structure. Personal project, so the scraped data and scrapers are git-ignored and not redistributed. Only code is in this repo.
+
+## Tech stack
+
+- Embeddings: sentence-transformers (bge-base-en-v1.5)
+- Vector DB: Qdrant (local, payload filtering)
+- Reranker: cross-encoder (bge-reranker-base)
+- LLM: Gemma via Ollama (OpenAI-compatible API, swappable)
+- UI: Streamlit · Eval: custom golden-set harness
+
+## Running it
+
 ```bash
-python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+python -m venv .venv && .venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env          # fill in KAGGLE_KEY, ANTHROPIC_API_KEY, etc.
-python scripts/download_data.py
+
+python src/perfrec/enrich/enrich.py
+python src/perfrec/embed/build_documents.py
+python src/perfrec/index/build_index.py
+
+ollama pull gemma4:e2b-it-qat
+python -m streamlit run app/streamlit_app.py
+python eval/run_eval.py
 ```
 
-## Roadmap
-0. **Data foundation** — acquire + profile + canonical schema  ← *you are here*
-1. Grounded single-scent RAG + explanations
-2. Climate-aware personalization
-3. Layering engine
-4. Feedback loop, eval, write-up
+## v2 upgrades
 
-## Data & ethics
-Built on published datasets (Parfumo, Fragrantica, FragDB), not scraped. Community data is treated as
-opinion and kept separate from brand-declared facts. Sources attributed; raw data kept out of git.
+- Bigger library + a second source to compare declared notes vs. crowd-perceived accords
+- llama.cpp instead of Ollama for finer GPU control and speed
+- A cleaner, more user-friendly UI
+- Cohere Command R+ for context-aware, grounded inference
+- and much more ,just stay tuned
+---
