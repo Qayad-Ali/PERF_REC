@@ -37,7 +37,7 @@ def evaluate():
         print(f"{r['query'][:44]:44} | dense={dp}  rerank={rp}")
 
     mean = lambda x: round(sum(x)/len(x), 3) if x else None
-    print(f"\n=== ABLATION: family precision@{K} ===")
+    print(f"\nABLATION: family precision@{K}")
     print(f"dense retrieval:        {mean(dense_s)}")
     print(f"dense + cross-encoder:  {mean(rerank_s)}")
     print(f"climate-filter correct: {mean(filt)}  (should be 1.0)")
