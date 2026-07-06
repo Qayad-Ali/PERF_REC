@@ -1,10 +1,5 @@
-# src/perfrec/ingest/load_sunnahscents.py
-"""
-Loader for the scraped fragrances.csv (SunnahScents schema) -> canonical parquet.
-Handles: stringified note lists, accords as [{'name','strength'}] with messy quoting,
-and keeps the rich `description` (great for embeddings).
-Run:  python src/perfrec/ingest/load_sunnahscents.py
-"""
+
+
 from __future__ import annotations
 import ast, re, sys
 from pathlib import Path
