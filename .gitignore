@@ -1,0 +1,37 @@
+
+data/raw/*
+data/interim/*
+data/processed/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+
+.env
+*.key
+kaggle.json
+
+
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+*.egg-info/
+.pytest_cache/
+
+# Vector store / models
+qdrant_storage/
+models/
+*.bin
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
+data/*.csv
+data/*.json
+data/*.jsonl
+data/*_done.txt
+
+
+scrape_*.py

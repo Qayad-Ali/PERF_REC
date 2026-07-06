@@ -1,0 +1,38 @@
+# PerfRec configuration
+
+data:
+  raw_dir: data/raw
+  interim_dir: data/interim
+  processed_dir: data/processed
+
+sources:
+  parfumo:
+    # primary base table — no login, direct GitHub download
+    url: "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-12-10/parfumo_data_clean.csv"
+  fragrantica:
+    # optional review corpus — needs a valid Kaggle token + accepted terms
+    kaggle: "olgagmiufana1/fragrantica-com-fragrance-dataset"
+  # NOTE: FragDB (fragdb.net) full bundle is PAID ($400+); HF repo is samples only. Not used.
+
+embeddings:
+  model: "BAAI/bge-base-en-v1.5"
+  # separate vectors for objective profile vs subjective reviews
+  multi_vector: true
+
+reranker:
+  model: "BAAI/bge-reranker-base"
+
+qdrant:
+  collection: "perfumes"
+  # hard filters applied before semantic ranking (climate, family, concentration)
+  hybrid: true
+
+generation:
+  provider: "anthropic"        # anthropic | openai | ollama
+  model: "claude-sonnet-5"
+  # generation must cite perfume ids and label brand-declared vs community-perceived
+  grounded_only: true
+
+layering:
+  default_ratio: "3:1"         # lighter : heavier
+  seed_pairings: eval/seed_layering_pairs.jsonl

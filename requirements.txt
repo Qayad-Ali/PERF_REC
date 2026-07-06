@@ -1,0 +1,34 @@
+# --- Data ---
+pandas
+duckdb
+pydantic>=2
+pyyaml
+
+
+# --- Embeddings & retrieval ---
+sentence-transformers
+qdrant-client
+rank-bm25           # sparse / hybrid
+FlagEmbedding       # bge reranker (cross-encoder)
+
+# --- Generation / orchestration ---
+# pick one LLM path:
+anthropic           # Claude API
+# openai
+# ollama            # local models
+
+# --- Review mining / NLP (derive longevity/season signals) ---
+scikit-learn
+
+# --- API & demo UI ---
+fastapi
+uvicorn
+streamlit
+
+# --- Eval ---
+ragas
+
+
+python-dotenv
+pytest
+jupyter

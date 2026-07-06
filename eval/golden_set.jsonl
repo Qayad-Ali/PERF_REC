@@ -1,0 +1,15 @@
+{"query": "fresh citrus scent for hot humid summer", "expect_family": "Fresh", "min_climate": 0.7}
+{"query": "long lasting oud for a winter evening", "expect_family": ["Amber","Woody"], "min_longevity": 0.7}
+{"query": "romantic floral for a date night", "expect_family": "Floral"}
+{"query": "warm sweet vanilla gourmand", "expect_family": "Amber"}
+{"query": "clean professional office scent, subtle", "expect_family": ["Fresh","Woody"], "min_climate": 0.6}
+{"query": "aquatic beach vacation fragrance", "expect_family": "Fresh", "min_climate": 0.8}
+{"query": "woody masculine everyday", "expect_family": "Woody"}
+{"query": "spicy warm scent for cold weather", "expect_family": ["Amber","Woody"]}
+{"query": "green fresh spring daytime", "expect_family": "Fresh"}
+{"query": "smoky leather bold statement", "expect_family": ["Woody","Amber"]}
+{"query": "light airy floral for summer", "expect_family": ["Floral","Fresh"], "min_climate": 0.7}
+{"query": "rich amber oriental for night out", "expect_family": "Amber"}
+{"query": "musky skin scent soft", "expect_family": ["Amber","Floral"]}
+{"query": "powdery elegant feminine", "expect_family": ["Floral","Amber"]}
+{"query": "citrusy energetic morning fragrance", "expect_family": ["Fresh","Floral"], "min_climate": 0.7}
