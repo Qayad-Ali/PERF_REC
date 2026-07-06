@@ -1,5 +1,5 @@
 # src/perfrec/retrieve/rerank.py
-"""Cross-encoder reranker: re-orders retrieved hits by true query relevance."""
+
 from sentence_transformers import CrossEncoder
 
 _reranker = None
